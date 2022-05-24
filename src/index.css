@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.input:active, .input:focus {
+    outline: none;
+}
+.textarea:active, .textarea:focus {
+    outline: none;
+}
+
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.testimonial .swiper-pagination-bullet{
+    width:16px;
+    height: 16px;
+    background-color: transparent;
+    border: 2px solid #3ABFF8;
+    opacity: 1;
+    border-radius: 20px;
+  }
+  .testimonial .swiper-pagination{
+    position: relative;
+    bottom:0 !important;
+  }
+  
+  .testimonial .swiper-pagination-bullet-active{
+    background-color: #3ABFF8;
+    width:32px
+  }
