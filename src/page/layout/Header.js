@@ -12,7 +12,7 @@ import useAuth from "../../hook/useAuth";
 import Drawer from '../../component/Drawer';
 import DropdownMenu from '../../component/DropdownMenu';
 
-import { API_CLIENT, ASSETS_URL, SEND_GET_REQUEST } from '../../utils/API';
+import { API_CLIENT, API_WAREHOUSE, ASSETS_URL, SEND_GET_REQUEST } from '../../utils/API';
 import ChangePassword from '../ChangePassword';
 import Navbar from './Navbar';
 import { AdminRouters } from '../../routers/AdminRouters';
@@ -28,8 +28,8 @@ const languages = {
   mn: {
     language: 'mn', icon: 'twemoji:flag-mongolia'
   },
-  ch:{
-    language:'ch',icon:'twemoji:flag-china'
+  ch: {
+    language: 'ch', icon: 'twemoji:flag-china'
   },
   en: {
     language: 'en', icon: 'twemoji:flag-for-flag-united-kingdom'
@@ -42,6 +42,7 @@ export default function Header({ dashboard = false }) {
   const [language, setLanguage] = useState(languages.mn);
   const [changePassword, setChangePassword] = useState(false);
   const { i18n, t } = useTranslation();
+  const [warehouse, setWarehouse] = useState({});
   const { pathname } = useLocation();
   const { notifications } = useSelector((state) => state.notification);
   const handleLanguage = (lang, i) => {
@@ -82,8 +83,20 @@ export default function Header({ dashboard = false }) {
         setNotificationsToStore(res.data.notifications);
       }
     }
-    if (isAuthenticated)
+    if (isAuthenticated) {
       loadNotification();
+      SEND_GET_REQUEST(API_WAREHOUSE.getSelf).then(res => {
+        if (res.status === 200) {
+          setWarehouse(res.data.warehouse);
+
+        }
+        else {
+          // toast.error("Please select your warehouse");
+        }
+      })
+
+    }
+
 
   }, [isAuthenticated]);
   return (
@@ -95,14 +108,20 @@ export default function Header({ dashboard = false }) {
               <IconButton onClick={() => setDrawer(true)}><MenuIcon></MenuIcon></IconButton>
             </div>
           }
-          <Link to="/" className="mr-5">
-            <div className='flex items-center gap-2'><img src="../../assets/logo.png" className="h-12 w-12" alt="logo" /></div>
+
+          <Link to="/" className="mr-5 hidden md:flex">
+            <div className='flex items-center gap-2'><img src="../../assets/logo.png" className="h-16 w-16" alt="logo" /></div>
           </Link>
+          {warehouse && !warehouse?.name &&
+            <Link to="/" className="mr-5 flex md:hidden">
+              <div className='flex items-center gap-2'><img src="../../assets/logo.png" className="h-16 w-16" alt="logo" /></div>
+            </Link>
+          }
 
         </div>
         {/* menu */}
-
-        <div className="hidden sm:flex items-center gap-6">
+        <div className='flex md:hidden uppercase items-center' ><label className='text-lg'>{warehouse?.name || ""}</label></div>
+        <div className="hidden md:flex items-center gap-6">
           <Link to="/" className={`font-bold text-lg ${(pathname === '/') ? 'text-red-500' : ''}`} >{t('menu.home')}</Link>
           {isAuthenticated && <>
             <Link to="/dashboard" className={`font-bold text-lg ${(pathname === '/dashboard') ? 'text-red-500' : ''}`} >{t('menu.dashboard')}</Link>
@@ -116,8 +135,9 @@ export default function Header({ dashboard = false }) {
 
         </div>
         <div className="flex items-center">
+
           {isAuthenticated &&
-            <div className="indicator mr-5">
+            <div className="indicator mr-1">
 
               {notifications && notifications.filter(n => !n.read).length > 0 && <Link to="/client/notification"> <span className="indicator-item badge badge-error text-white">{notifications.filter(n => !n.read).length}</span>
                 <div className="hover:text-sky-500 cursor-pointer"><Icon icon="akar-icons:bell" height={30} width={30} /></div>
@@ -148,12 +168,40 @@ export default function Header({ dashboard = false }) {
             }
           >
             <div className="shadow bg-base-100 rounded px-2 py-1 mt-2 min-w-max last:border-none">
-              {!isAuthenticated &&
-                <div className=' py-1'>
+              <div className="py-1 flex ">
+                <div className={`btn btn-ghost btn-sm gap-2 justify-start ${language.language === "mn" && 'btn-active'}`}
+                  onClick={() => { handleLanguage('mn', 'twemoji:flag-mongolia') }} >
+                  <Icon className="cursor-pointer" icon="twemoji:flag-mongolia" width={24} />
+
+                </div>
+                <div className={`btn btn-ghost btn-sm gap-2 justify-start ${language.language === "ch" && 'btn-active'}`}
+                  onClick={() => { handleLanguage('ch', 'twemoji:flag-china') }} >
+                  <Icon className="cursor-pointer" icon="twemoji:flag-china" width={24} />
+
+                </div>
+                <div className={`btn btn-ghost btn-sm gap-2 justify-start ${language.language === "en" && 'btn-active'}`}
+                  onClick={() => handleLanguage('en', 'twemoji:flag-for-flag-united-kingdom')} >
+                  <Icon className="cursor-pointer " icon="twemoji:flag-for-flag-united-kingdom" width={24} />
+
+                </div>
+              </div>
+              {!isAuthenticated && <>
+                <div className='border-t py-1'>
+                  <button className='btn btn-sm btn-ghost w-full justify-start gap-3' onClick={() => navigate('/', { replace: true })}>
+                    {t('menu.home')}
+                  </button>
+                </div>
+                <div className='border-t py-1'>
                   <button className='btn btn-sm btn-ghost w-full justify-start gap-3' onClick={() => navigate('/auth/login', { replace: true })}>
                     {t('menu.login')}
                   </button>
                 </div>
+                <div className='border-t py-1'>
+                  <button className='btn btn-sm btn-ghost w-full justify-start gap-3' onClick={() => navigate('/warehouse-rank', { replace: true })}>
+                    {t('menu.warehouseRank')}
+                  </button>
+                </div>
+              </>
               }
               {isAuthenticated && user && !user.role.includes("Staff") &&
 
@@ -164,23 +212,7 @@ export default function Header({ dashboard = false }) {
                 </div>
 
               }
-              <div className=" border-t py-1 flex ">
-                <div className={`btn btn-ghost btn-sm gap-2 justify-start ${language.language === "mn" && 'btn-active'}`}
-                  onClick={() => { handleLanguage('mn', 'twemoji:flag-mongolia') }} >
-                  <Icon className="cursor-pointer" icon="twemoji:flag-mongolia" width={24} />
-                  
-                </div>
-                <div className={`btn btn-ghost btn-sm gap-2 justify-start ${language.language === "ch" && 'btn-active'}`}
-                  onClick={() => { handleLanguage('ch', 'twemoji:flag-china') }} >
-                  <Icon className="cursor-pointer" icon="twemoji:flag-china" width={24} />
-                  
-                </div>
-                <div className={`btn btn-ghost btn-sm gap-2 justify-start ${language.language === "en" && 'btn-active'}`}
-                  onClick={() => handleLanguage('en', 'twemoji:flag-for-flag-united-kingdom')} >
-                  <Icon className="cursor-pointer " icon="twemoji:flag-for-flag-united-kingdom" width={24} />
-                  
-                </div>
-              </div>
+
               {isAuthenticated && !user.role.includes("Staff") && <>
                 <div className="border-t py-1">
                   <button className="btn btn-ghost btn-sm w-full justify-start gap-3" onClick={handlePassword} >
@@ -193,20 +225,22 @@ export default function Header({ dashboard = false }) {
                   <button className='btn btn-sm btn-ghost w-full justify-start gap-3' onClick={handleProfile}>
                     {t('menu.profile')}
                   </button>
-                </div>
-                <div className='border-t py-1'>
-                  <button className='btn btn-sm btn-ghost w-full justify-start gap-3' onClick={handleBilling}>
-                    {t('menu.billing')}
-                  </button>
                 </div></>
               }
               {
-                user && isAuthenticated && user.role.includes('admin') &&
-                <div className='border-t py-1'>
-                  <button className='btn btn-sm w-full btn-ghost  justify-start gap-3' onClick={() => { navigate('/admin/warehouse', { replace: true }) }}>
-                    {t('menu.warehouse')}
-                  </button>
-                </div>
+                user && isAuthenticated && user.role.includes('admin') && <>
+                  <div className='border-t py-1'>
+                    <button className='btn btn-sm btn-ghost w-full justify-start gap-3' onClick={handleBilling}>
+                      {t('menu.billing')}
+                    </button>
+                  </div>
+                  <div className='border-t py-1'>
+                    <button className='btn btn-sm w-full btn-ghost  justify-start gap-3' onClick={() => { navigate('/admin/warehouse', { replace: true }) }}>
+                      {t('menu.warehouse')}
+                    </button>
+                  </div>
+
+                </>
               }
               {
                 user && isAuthenticated && user.role.includes('super-admin') &&
