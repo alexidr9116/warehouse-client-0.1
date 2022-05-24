@@ -2,11 +2,12 @@ import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 
 // utils 
-import { SEND_POST_REQUEST, API_AUTH, SEND_GET_REQUEST, API_CLIENT } from '../utils/API';
+import { SEND_POST_REQUEST, API_AUTH, SEND_GET_REQUEST, API_CLIENT, API_WAREHOUSE } from '../utils/API';
 
 import { isValidToken, setSession } from '../utils/jwt';
-import {  setNotificationsToStore } from '../store/action/notificationAction';
- 
+import { setNotificationsToStore } from '../store/action/notificationAction';
+import { setWarehouseToStore } from '../store/action/warehouseAction';
+
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -81,7 +82,7 @@ function AuthProvider({ children }) {
                 const response = await SEND_GET_REQUEST('/api/warehouse/auth/my-account');
 
                 const { user } = response.data;
-               
+
 
                 dispatch({
                     type: 'INITIALIZE',
@@ -90,6 +91,15 @@ function AuthProvider({ children }) {
                         user,
                     },
                 });
+                const res = await SEND_GET_REQUEST(API_WAREHOUSE.getSelf);
+
+                if (res.status === 200) {
+                    setWarehouseToStore(res.data.warehouse);
+                }
+                else {
+                    setWarehouseToStore({});
+                }
+
             } else {
                 dispatch({
                     type: 'INITIALIZE',
@@ -120,15 +130,15 @@ function AuthProvider({ children }) {
         try {
             const mobile = window.mobile;
             const otpResult = await SEND_POST_REQUEST(API_AUTH.verifyOTP, { mobile, otp });
-            
+
             const { success } = otpResult.data;
-           
+
             if (success) {
                 // register or update mongodb
                 const response = await SEND_POST_REQUEST(API_AUTH.register, {
                     mobile,
                 });
-               
+
                 if (response.data.success) {
                     const { token, user } = response.data;
                     setSession(token);
@@ -140,8 +150,8 @@ function AuthProvider({ children }) {
                     });
                     return ({ success: true });
                 }
-                else{
-                    return{success:false,err:"Register failed"};
+                else {
+                    return { success: false, err: "Register failed" };
                 }
             } else {
                 return ({ success: false, err: otpResult.message });
@@ -170,12 +180,22 @@ function AuthProvider({ children }) {
             return { success: false, message: 'Your account is inactive. Please contact with administrator' };
         }
         setSession(token);
+
         dispatch({
             type: 'LOGINED',
             payload: {
                 user,
             },
         });
+        const res = await SEND_GET_REQUEST(API_WAREHOUSE.getSelf);
+
+        if (res.status === 200) {
+            setWarehouseToStore(res.data.warehouse);
+        }
+        else {
+            setWarehouseToStore({});
+        }
+
         return { success: true, message: 'You are login successfully' };
 
     }
@@ -186,22 +206,32 @@ function AuthProvider({ children }) {
             if (!token) {
                 try {
                     window.mobile = mobile;
-                    
+
                 } catch (err) {
                     console.log(err);
-                   
+
                 }
             } else {
                 if (user.status === "inactive") {
                     return "inactive";
                 }
                 setSession(token);
+
                 dispatch({
                     type: 'LOGINED',
                     payload: {
                         user,
                     },
                 });
+                const res = await SEND_GET_REQUEST(API_WAREHOUSE.getSelf);
+
+                if (res.status === 200) {
+                    setWarehouseToStore(res.data.warehouse);
+                }
+                else {
+                    setWarehouseToStore({});
+                }
+
             }
             return response.data.step;
         }
@@ -216,7 +246,7 @@ function AuthProvider({ children }) {
     const logout = async () => {
         try {
             setSession(null);
-
+            setWarehouseToStore({})
             dispatch({ type: 'LOGOUT' });
             // signOut(AUTH);
         } catch (err) {

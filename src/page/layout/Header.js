@@ -42,7 +42,7 @@ export default function Header({ dashboard = false }) {
   const [language, setLanguage] = useState(languages.mn);
   const [changePassword, setChangePassword] = useState(false);
   const { i18n, t } = useTranslation();
-  const [warehouse, setWarehouse] = useState({});
+  const {warehouse} = useSelector((state)=>state.warehouse);
   const { pathname } = useLocation();
   const { notifications } = useSelector((state) => state.notification);
   const handleLanguage = (lang, i) => {
@@ -85,16 +85,7 @@ export default function Header({ dashboard = false }) {
     }
     if (isAuthenticated) {
       loadNotification();
-      SEND_GET_REQUEST(API_WAREHOUSE.getSelf).then(res => {
-        if (res.status === 200) {
-          setWarehouse(res.data.warehouse);
-
-        }
-        else {
-          // toast.error("Please select your warehouse");
-        }
-      })
-
+     
     }
 
 
