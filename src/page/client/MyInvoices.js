@@ -50,7 +50,7 @@ export default function MyInvoices() {
         setPageFiltered(filter.slice(currentPage * PER_COUNT, Math.min((currentPage + 1) * PER_COUNT, filter.length)));
     }
     const loadList = () => {
-        setLoadingMessage("Fetching Data from DB")
+        setLoadingMessage("Loading..")
         setLoading(true);
         SEND_POST_REQUEST(`${API_CLIENT.getInvoices}`).then(res => {
             setLoading(false);

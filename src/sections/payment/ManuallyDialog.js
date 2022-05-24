@@ -15,8 +15,8 @@ export default function ManuallyDialog({bank, warehouse, products, onAccept, onC
                 <div className='grid  w-full p-5'>
 
                     <div className="tabs mb-4" >
-                        <div className={`tab tab-lifted ${currentTab === 1 ? 'tab-active' : ''}`} onClick={() => { setCurrentTab(1) }}>QPay</div>
-                        <div className={`tab tab-lifted ${currentTab === 2 ? 'tab-active' : ''}`} onClick={() => { setCurrentTab(2) }}>Products</div>
+                        <div className={`tab tab-lifted ${currentTab === 1 ? 'tab-active' : ''}`} onClick={() => { setCurrentTab(1) }}>{t('words.qpay')}</div>
+                        <div className={`tab tab-lifted ${currentTab === 2 ? 'tab-active' : ''}`} onClick={() => { setCurrentTab(2) }}>{t('table.productCount')}</div>
                         <div className="tab tab-lifted mr-6 flex-1 cursor-default"></div>
                     </div>
                     {
@@ -24,7 +24,7 @@ export default function ManuallyDialog({bank, warehouse, products, onAccept, onC
                         <div className="grid lg:grid-cols-2 gap-2 p-4 w-full ">
 
                             <div className="card p-6  gap-3  h-full text-center ">
-                                <h4 className="text-lg">QR Image</h4>
+                                <h4 className="text-lg">QR {t('words.image')}</h4>
                                 {/* img */}
                                 <div className="mx-auto relative ">
 
@@ -55,11 +55,11 @@ export default function ManuallyDialog({bank, warehouse, products, onAccept, onC
                                 <table className="table table-compact w-full ">
                                     <tbody>
                                         <tr className="uppercase">
-                                            <td>barcode</td>
-                                            <td>totalCost</td>
-                                            <td>price</td>
-                                            <td>deliveryType</td>
-                                            <td>deliveryCost</td>
+                                            <td>{t('table.barcode')}</td>
+                                            <td>{t('table.total')}</td>
+                                            <td>{t('table.price')}</td>
+                                            <td>{t('table.deliveryType')}</td>
+                                            <td>{t('table.deliveryCost')}</td>
                                         </tr>    
                                         {products.map((product, index) => (
                                             <tr key={index}>

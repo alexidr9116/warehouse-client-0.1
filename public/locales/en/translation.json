@@ -48,8 +48,11 @@
         
         "priceWith":"Price With",
         "saveSetting":"Save Setting",
-        "view":"View"
-
+        "view":"View",
+        "qpay":"QPay",
+        "manually":"Manually",
+        "image":"Image",
+        "cancel":"Cancel"
     },
     
     "changePassword": {
@@ -112,7 +115,11 @@
         "bankName":"Bank Name",
         "bankAccountName":"Account Name",
         "chooseQr":"Choose QR image",
-        "bankAccountNumber":"Account Name"
+        "bankAccountNumber":"Account Name",
+        "userName":"User Name",
+        "password":"Password",
+        "invoiceAlias":"Invoice Alias",
+        "passphrase":"Passphrase"
     },
     "table":{
         "payment":"Payment Status",

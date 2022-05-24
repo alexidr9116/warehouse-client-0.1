@@ -48,8 +48,11 @@
         
         "priceWith":"Price With",
         "saveSetting":"Save Setting",
-        "view":"View"
-
+        "view":"View",
+        "qpay":"QPay",
+        "manually":"Manually",
+        "image":"Image",
+        "cancel":"Cancel"
     },
     
     "changePassword": {

@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import useAuth from "../../hook/useAuth";
 import { API_BILLING } from "../../utils/API";
 
 export default function QPayBilling({ onSubmit, checked }) {
     const { user } = useAuth();
+    const {t} = useTranslation();
 //     const [checked, setChecked] = useState((user?.role.includes("admin")));
     const [loading, setLoading] = useState(false);
     const defaultValues = useMemo(() => ({
@@ -29,22 +31,22 @@ export default function QPayBilling({ onSubmit, checked }) {
             <div className="grid md:grid-cols-2 gap-5 mb-5">
 
                 <div className="w-full">
-                    <p className="font-bold text-sm pl-2"> {`Username`}</p>
+                    <p className="font-bold text-sm pl-2"> {t('billing.userName')}</p>
                     <input className="input h-10 border border-stone-300 w-full" disabled={!checked} required
                         {...register("payUsername")} />
                 </div>
                 <div className="w-full">
-                    <p className="font-bold text-sm pl-2"> {`Password`}</p>
+                    <p className="font-bold text-sm pl-2"> {t('billing.password')}</p>
                     <input className="input h-10 border border-stone-300 w-full "
                         {...register("payPassword")} disabled={!checked} />
                 </div>
                 <div className="w-full">
-                    <p className="font-bold text-sm pl-2"> {`InvoiceAlias`}</p>
+                    <p className="font-bold text-sm pl-2"> {t('billing.invoiceAlias')}</p>
                     <input className="input h-10 border border-stone-300 w-full" required disabled={!checked}
                         {...register("invoiceAlias")} />
                 </div>
                 <div className="w-full">
-                    <p className="font-bold text-sm pl-2"> {`Passphrase`}</p>
+                    <p className="font-bold text-sm pl-2"> {t('billing.passphrase')}</p>
                     <input className="input h-10 border border-stone-300 w-full" required disabled={!checked}
                         {...register("payPassphrase")} />
                 </div>
