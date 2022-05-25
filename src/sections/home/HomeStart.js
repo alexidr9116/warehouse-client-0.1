@@ -1,13 +1,15 @@
 import { Icon } from "@iconify/react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import Image from "../../component/Image";
 
 export default function HomeStart() {
+  const {t} = useTranslation();
   return (
     <div className='container max-w-6xl  px-5 mb-20'>
-      <div className='grid md:grid-cols-2 gap-x-8 gap-y-12'>
+      <div className='grid md:grid-cols-2 gap-x-8 gap-y-12 justify-center'>
         <div className='relative  px-8'>
-          <Image src="/images/home/education.png" className=" w-[90%]" />
+          <Image src="/images/home/education.png" className="rounded-full " />
           <div className='absolute rounded-full flex px-3 py-1 items-center top-1/3 left-0 bg-white gap-2 border-0'>
             <div className='flex bg-accent rounded-full text-white p-2'>
               <Icon icon={'carbon:security'} width={24} className="m-auto" />
@@ -31,14 +33,11 @@ export default function HomeStart() {
 
         <div className='flex flex-col gap-8 justify-center h-full text-center'>
           <p className='text-4xl font-bold'>
-            Your Delivery Start Here
+            {t('home.startHereTitle')}
           </p>
-          <p className='leading-10'>
-            One of the most important choices in your delivery is choosing the right warehouse for your
-            business, the right warehouse,  or online store. By using our platform, you’ll have
-            access to thousands of choices suited for you. Don’t leave it to chance or relyi
+          <p className='leading-10'>{t('home.startHereContent')}
           </p>
-          <Link to="/reviews/10" className='btn btn-accent btn-lg mx-auto gap-2 text-white  px-5 shadow-2xl shadow-accent/40'>
+          <Link to="/warehouse-rank" className='btn btn-accent btn-lg mx-auto gap-2 text-white  px-5 shadow-2xl shadow-accent/40'>
             <Icon icon={'fa:search'} />
             Search Reviews
           </Link>

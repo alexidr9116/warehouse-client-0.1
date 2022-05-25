@@ -15,9 +15,7 @@ export default function CategoryCard({ data,className }) {
 
   return (
     <div className={`p-2 bg-white rounded-xl ${className}`}>
-      <div className='mb-5 relative'>
-        <Image src={`${ASSETS_URL.root}${warehouse.img}`} ratio={2 / 3} className="rounded-xl" />
-      </div>
+      
       <div className='p-3'>
         <p className='text-2xl font-bold mb-2'>
           {warehouse.name}
@@ -25,6 +23,9 @@ export default function CategoryCard({ data,className }) {
         <div className='flex items-center mb-2'>
           <Rating value = {avg} precision={0.5} readOnly /> ({fNumber(avg)} star{avg>1?'s':''})
         </div>
+        <div className='mb-5 flex w-full justify-center'>
+        <Image src={`${ASSETS_URL.root}${warehouse.img}`} alt = {`${warehouse.img}`} ratio={3/5} className="rounded-lg" />
+      </div>
         <p>
           24H services:{warehouse.openAlways?"Yes":"No"}
         </p>

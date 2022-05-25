@@ -89,8 +89,11 @@
         "scan_barcode":"Scanning Barcode",
         "switch_front_camera":"Switch to Front Camera",
         "switch_back_camera":"Switch to Back Camera",
-        "get_products":"Get Products"
-
+        "get_products":"Get Products",
+        "heroTitle":"About Warehouse Reviews & Orders.",
+        "heroContent":"One of the most important choices in your ecommerce is choosing the right warehouse for your business, the right warehouse, or online store. By using our platform, you’ll have access to thousands of choices suited for you. Don’t leave it to chance or relyi",
+        "startHereTitle":"Save your cost and start trusted warehouse business ",
+        "startHereContent":"One of the most important choices in your ecommerce is choosing the right warehouse for your business, the right warehouse, or online store. By using our platform, you’ll have access to thousands of choices suited for you. Don’t leave it to chance or relyi"
     },
     "dashboard": {
         "allProducts":"Orders",

@@ -16,7 +16,7 @@ export default function HomeTopCategory({warehouses}) {
 
       <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-8'>
         {warehouses.map((item, index) =>
-          <CategoryCard data={item} key={index} />)}
+          <CategoryCard data={item} key={index} className = " border border-accent" />)}
       </div>
     </div>
   )

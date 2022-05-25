@@ -15,30 +15,34 @@ import { fShortDate } from "../../utils/uFormatter";
 
 export default function Notifications() {
     const [senders, setSenders] = useState([]);
+    const [filteredSenders, setFilteredSenders] = useState([]);
     const [selected, setSelected] = useState([]);
     const [selectedUser, setSelectedUser] = useState({});
     const { notifications } = useSelector((state) => state.notification);
     const handleSelectUser = (id) => {
-        
+
         const _sender = senders.filter(u => (u._id === id))[0];
         setSelected(_sender.notifications)
         setSelectedUser(_sender);
     }
     const handleDeleteNotification = (id) => {
-        SEND_DELETE_REQUEST(`${API_CLIENT.deleteNotification}`,id).then(res => {
+        SEND_DELETE_REQUEST(`${API_CLIENT.deleteNotification}`, id).then(res => {
             if (res.status === 200) {
                 const __notifications = [];
                 for (const _notification of notifications.slice(0, notifications.length)) {
                     if (_notification._id !== id) {
-                        __notifications.push({ ..._notification})
+                        __notifications.push({ ..._notification })
                     }
                 }
                 setNotificationsToStore(__notifications);
                 loadList();
             }
         });
-        
 
+
+    }
+    const handleSearch = (value) => {
+        setFilteredSenders(senders.filter((_sender) => ( `${_sender.mobile}`.includes(value) || _sender.firstName.includes(value) || _sender.lastName.includes(value))));
     }
     const loadList = () => {
         SEND_GET_REQUEST(API_CLIENT.getReceivedNotifications).then((res) => {
@@ -47,7 +51,7 @@ export default function Notifications() {
                 const _data = res.data.notifications;
                 setSelected(_data);
                 // await setNotificationsToStore(_data);
-             
+
                 for (const _notification of _data) {
                     const _filter = _senders.filter((u) => (u._id === _notification.sender._id));
                     if (_filter.length === 0) {
@@ -65,6 +69,7 @@ export default function Notifications() {
                 }
                 // console.log(_senders);
                 setSenders(_senders);
+                setFilteredSenders(_senders);
             }
             else {
                 toast.error(res.message);
@@ -110,14 +115,15 @@ export default function Notifications() {
     useEffect(() => {
         loadList();
     }, []);
+
     return (
         <Page title="Notification" className="flex flex-col lg:flex-row gap-4 p-2">
             {/* Contacts */}
             <div className="flex flex-col">
                 <div className="flex w-full mb-2">
-                    <SearchInput button={true} />
+                    <SearchInput button={true} handleChangeSearch={handleSearch} />
                 </div>
-                {senders.map((sender, index) => {
+                {filteredSenders.map((sender, index) => {
                     return (
                         <div className="w-full flex cursor-pointer gap-1 items-center border-b p-2 " key={index} onClick={() => handleSelectUser(sender._id)}>
                             <Image src={`${ASSETS_URL.root}${sender.avatar}`} alt="avatar"
@@ -137,7 +143,7 @@ export default function Notifications() {
                                 notification && (notification.type === "sms") &&
                                 <div className="alert alert-warning shadow-sm rounded-md mb-4" >
                                     <div>
-                                        <IconButton onClick={()=>handleDeleteNotification(notification._id)} ><DeleteOutlined></DeleteOutlined></IconButton>
+                                        <IconButton onClick={() => handleDeleteNotification(notification._id)} ><DeleteOutlined></DeleteOutlined></IconButton>
 
                                         <div className="flex flex-col gap-2">
                                             <Icon icon={'fa-solid:sms'} width={40}> </Icon>
@@ -160,7 +166,7 @@ export default function Notifications() {
                                 notification && (notification.type === "payment") &&
                                 <div className="alert alert-info shadow-sm rounded-md mb-4">
                                     <div>
-                                        <IconButton  onClick={()=>handleDeleteNotification(notification._id)} ><DeleteOutlined></DeleteOutlined></IconButton>
+                                        <IconButton onClick={() => handleDeleteNotification(notification._id)} ><DeleteOutlined></DeleteOutlined></IconButton>
 
                                         <div className="flex flex-col gap-2">
                                             <Icon icon={'material-symbols:payments-outline'} width={40} > </Icon>

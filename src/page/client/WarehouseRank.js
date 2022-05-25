@@ -100,7 +100,7 @@ export default function WarehouseRank() {
     }, [unit, dynValue])
     return (
         <Page title='Warehouse Ranking' className="flex w-full flex-col gap-4  p-2">
-            <div className='flex w-full sm:justify-between flex-col sm:flex-row p-2'>
+            <div className='flex w-full sm:justify-between flex-col sm:flex-row p-2 gap-2'>
                 <div className='flex border rounded-lg '>
                     <input type="number" className='input text-right grow w-20' onChange={(e) => { setDynValue(e.target.value) }} value={dynValue} />
                     <select className='select select-bordered grow-0' onChange={(e) => { setUnit(e.target.value) }} value={unit}>
